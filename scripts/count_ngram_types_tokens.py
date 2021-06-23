@@ -1,4 +1,6 @@
-
+"""
+Count the number of n-gram types and tokens in the first and second half of the corpus.
+"""
 from tabulate import tabulate
 
 from childesngrams.io import load_tokens

@@ -1,10 +1,8 @@
 import kenlm
 from subprocess import Popen, PIPE
 import matplotlib.pyplot as plt
-import seaborn as sns
+
 import numpy as np
-from itertools import cycle
-from pathlib import Path
 import tempfile
 
 from childesngrams import configs
@@ -12,7 +10,9 @@ from childesngrams.io import load_tokens
 
 CORPUS_NAME = 'childes-20201026'
 NGRAM_SIZES = [2, 3, 4, 5, 6]  # must be 2, 3, 4, 5, or 6
-LMPLZ_PATH = '/home/ph/kenlm/bin/lmplz'  # these binaries must be installed by user
+
+# these binaries must be installed by user
+LMPLZ_PATH = '/home/ph/kenlm/bin/lmplz'
 BINARIZE_PATH = '/home/ph/kenlm/bin/build_binary'
 
 tokens = load_tokens(CORPUS_NAME)
@@ -21,8 +21,13 @@ tokens2 = tokens[-len(tokens) // 2:]
 
 
 def calc_pps(str1, str2):
+    if not configs.Dirs.tmp.exists():
+        configs.Dirs.tmp.mkdir()
+
     result = []
-    for s1, s2 in [(str1, str1), (str2, str2)]:
+    for s1, s2 in [(str1, str1),  # we train and eval on the same string (first half of corpus)
+                   (str2, str2),  # we train and eval on the same string (second half of corpus)
+                   ]:
 
         # train n-gram model
         with tempfile.TemporaryFile('w') as fp:
@@ -30,10 +35,11 @@ def calc_pps(str1, str2):
             train_process = Popen([LMPLZ_PATH, '-o', str(ngram_size)], stdin=fp, stdout=PIPE)
 
         # save model
-        out_path = Path(__file__).parent / '{}_{}-grams.arpa'.format(CORPUS_NAME, ngram_size)
+        out_path = configs.Dirs.tmp / '{}_{}-grams.arpa'.format(CORPUS_NAME, ngram_size)
         if not out_path.exists():
             out_path.touch()
         arpa_file_bytes = train_process.stdout.read()
+        assert arpa_file_bytes  # this may be empty if train_process runs out of memory
         out_path.write_text(arpa_file_bytes.decode())
 
         # binarize model
@@ -60,22 +66,21 @@ for ngram_size in NGRAM_SIZES:
 # fig
 bar_width = 0.35
 fig, ax = plt.subplots(dpi=configs.Fig.dpi)
-palette = cycle(sns.color_palette("hls", 2)[::-1])
 ax.set_title('')
-ax.set_ylabel('Perplexity')
-ax.set_xlabel('N-gram size')
+ax.set_ylabel('Perplexity', fontsize=configs.Fig.ax_fontsize)
+ax.set_xlabel('N-gram size', fontsize=configs.Fig.ax_fontsize)
 # ax.set_ylim([0, 30])
 ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 ax.tick_params(axis='both', which='both', top=False, right=False)
 ax.set_xticks(np.array(NGRAM_SIZES) + bar_width / 2)
-ax.set_xticklabels(NGRAM_SIZES)
+ax.set_xticklabels(NGRAM_SIZES, fontsize=configs.Fig.ax_fontsize)
 # plot
 for n, (y, ngram_size) in enumerate(xys):
     x = np.array([ngram_size, ngram_size + bar_width])
-    for x_single, y_single, c, label in zip(x, y, palette, ['partition 1', 'partition 2']):
+    for x_single, y_single, c, label in zip(x, y, ['C0', 'C1'], ['partition 1', 'partition 2']):
         label = label if n == 0 else '_nolegend_'  # label only once
         ax.bar(x_single, y_single, bar_width, color=c, label=label)
-plt.legend()
+plt.legend(loc='best', frameon=False, fontsize=configs.Fig.leg_fontsize)
 plt.tight_layout()
 fig.show()

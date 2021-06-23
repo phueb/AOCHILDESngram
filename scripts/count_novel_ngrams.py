@@ -67,11 +67,11 @@ for ax, ngram_size in zip(axs, NGRAM_SIZES):
     ax.spines['top'].set_visible(False)
     ax.xaxis.set_major_formatter(FuncFormatter(human_format))
     ax.set_ylabel('Novel {}-grams'.format(ngram_size), fontsize=configs.Fig.ax_fontsize)
-    ax.yaxis.grid(True)
+    # ax.yaxis.grid(True)
     # plot
     ax.plot(*size2novel_xys1[ngram_size], linestyle='-', label='age-ordered')
     ax.plot(*size2novel_xys2[ngram_size], linestyle='-', label='reverse age-ordered')
-plt.legend(framealpha=1.0)
+plt.legend(loc='best', frameon=False, fontsize=configs.Fig.leg_fontsize)
 plt.tight_layout()
 plt.show()
 

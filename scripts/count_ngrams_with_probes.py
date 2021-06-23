@@ -1,3 +1,6 @@
+"""
+Count the number of n-grams that contains a probe word in the first and second half of the corpus.
+"""
 from tabulate import tabulate
 
 from childesngrams.io import load_tokens

@@ -5,7 +5,8 @@ class Dirs:
     root = Path(__file__).parent.parent
     src = Path(__file__).parent
     corpora = root / 'corpora'
-    output = root / 'output'
+    bi_grams = root / 'bi_grams'
+    tmp = root / 'tmp'
 
 
 class Fig:

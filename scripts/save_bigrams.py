@@ -17,7 +17,7 @@ num_total = counts.sum()
 print(len(unique_fs), len(counts), num_total)
 
 print(unique_fs)
-p = configs.Dirs.output / 'bi-grams.txt'
+p = configs.Dirs.bi_grams / 'bi-grams.txt'
 with p.open('w') as f:
     for ng, freq in sorted(ngram2f.items(), key=lambda i: i[1], reverse=True):
 
