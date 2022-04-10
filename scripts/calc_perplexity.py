@@ -1,21 +1,21 @@
 import kenlm
 from subprocess import Popen, PIPE
 import matplotlib.pyplot as plt
-
 import numpy as np
 import tempfile
 
-from childesngrams import configs
-from childesngrams.io import load_tokens
+from aochildes.dataset import AOChildesDataSet
 
-CORPUS_NAME = 'childes-20201026'
-NGRAM_SIZES = [2, 3, 4, 5, 6]  # must be 2, 3, 4, 5, or 6
+from aochildesngrams import configs
+
+
+NGRAM_SIZES = [2, 3]  # must be 2, 3, 4, 5, or 6
 
 # these binaries must be installed by user
 LMPLZ_PATH = '/home/ph/kenlm/bin/lmplz'
 BINARIZE_PATH = '/home/ph/kenlm/bin/build_binary'
 
-tokens = load_tokens(CORPUS_NAME)
+tokens = AOChildesDataSet().load_tokens()
 tokens1 = tokens[:len(tokens) // 2]
 tokens2 = tokens[-len(tokens) // 2:]
 
@@ -35,7 +35,7 @@ def calc_pps(str1, str2):
             train_process = Popen([LMPLZ_PATH, '-o', str(ngram_size)], stdin=fp, stdout=PIPE)
 
         # save model
-        out_path = configs.Dirs.tmp / '{}_{}-grams.arpa'.format(CORPUS_NAME, ngram_size)
+        out_path = configs.Dirs.tmp / f'aochildes_{ngram_size}-grams.arpa'
         if not out_path.exists():
             out_path.touch()
         arpa_file_bytes = train_process.stdout.read()

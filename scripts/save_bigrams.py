@@ -1,15 +1,13 @@
 from collections import Counter
 import numpy as np
 
-from childesngrams import configs
-from childesngrams.io import load_tokens
-from childesngrams.utils import get_sliding_windows
+from aochildes.dataset import AOChildesDataSet
 
-# /////////////////////////////////////////////////////////////////
+from aochildesngrams import configs
+from aochildesngrams.utils import get_sliding_windows
 
-CORPUS_NAME = 'childes-20201026'
 
-tokens = load_tokens(CORPUS_NAME)
+tokens = AOChildesDataSet().load_tokens()
 
 ngram2f = Counter(get_sliding_windows(2, tokens))
 unique_fs, counts = np.unique([v for v in ngram2f.values()], return_counts=True)

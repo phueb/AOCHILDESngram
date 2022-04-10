@@ -3,14 +3,15 @@ Count the number of n-grams that contains a probe word in the first and second h
 """
 from tabulate import tabulate
 
-from childesngrams.io import load_tokens
-from childesngrams.utils import get_sliding_windows
+from aochildes.dataset import AOChildesDataSet
 
-CORPUS_NAME = 'childes-20201026'
+from aochildesngrams.utils import get_sliding_windows
+
+
 PROBES = ['cat', 'dog']
 NGRAM_SIZES = [1, 2, 3, 4, 5, 6, 7]
 
-tokens = load_tokens(CORPUS_NAME)
+tokens = AOChildesDataSet().load_tokens()
 tokens1 = tokens[:len(tokens) // 2]
 tokens2 = tokens[-len(tokens) // 2:]
 

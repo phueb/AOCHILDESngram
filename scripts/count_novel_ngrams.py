@@ -6,16 +6,17 @@ import pyprind
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
-from childesngrams import configs
-from childesngrams.io import load_tokens
-from childesngrams.utils import human_format
-from childesngrams.utils import get_sliding_windows
+from aochildes.dataset import AOChildesDataSet
 
-CORPUS_NAME = 'childes-20201026'
+from aochildesngrams import configs
+from aochildesngrams.utils import human_format
+from aochildesngrams.utils import get_sliding_windows
+
+
 NUM_BINS = 32
 NGRAM_SIZES = [2, 3]
 
-tokens = load_tokens(CORPUS_NAME)
+tokens = AOChildesDataSet().load_tokens()
 
 
 def make_novel_xys(n_grams):

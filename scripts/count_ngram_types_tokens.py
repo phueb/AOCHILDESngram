@@ -3,14 +3,15 @@ Count the number of n-gram types and tokens in the first and second half of the 
 """
 from tabulate import tabulate
 
-from childesngrams.io import load_tokens
-from childesngrams.utils import get_sliding_windows
+from aochildes.dataset import AOChildesDataSet
+
+from aochildesngrams.utils import get_sliding_windows
 
 
-CORPUS_NAME = 'childes-20201026'
+
 NGRAM_SIZES = [1, 2, 3]
 
-tokens = load_tokens(CORPUS_NAME)
+tokens = AOChildesDataSet().load_tokens()
 tokens1 = tokens[:len(tokens) // 2]
 tokens2 = tokens[-len(tokens) // 2:]
 

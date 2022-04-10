@@ -4,14 +4,15 @@ Research questions:
 """
 import matplotlib.pyplot as plt
 
-from childesngrams import configs
-from childesngrams.io import load_tokens
-from childesngrams.utils import get_sliding_windows
+from aochildes.dataset import AOChildesDataSet
 
-CORPUS_NAME = 'childes-20201026'
+from aochildesngrams import configs
+from aochildesngrams.utils import get_sliding_windows
+
+
 MAX_NGRAM_SIZE = 7
 
-tokens = load_tokens(CORPUS_NAME)
+tokens = AOChildesDataSet().load_tokens()
 tokens1 = tokens[:len(tokens) // 2]
 tokens2 = tokens[-len(tokens) // 2:]
 
